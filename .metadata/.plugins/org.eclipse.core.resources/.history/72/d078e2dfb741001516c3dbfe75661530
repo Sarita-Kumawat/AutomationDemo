@@ -1,0 +1,12 @@
+package Pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+public class viewJobData 
+{
+ WebDriver driver;
+ By standard = By.xpath("//a[text()='Standard Reports']");
+ 
+  public ()
+}

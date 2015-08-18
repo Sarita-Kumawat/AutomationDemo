@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" total="1" passed="1">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Default suite" duration-ms="59065" started-at="2015-08-17T11:40:11Z" finished-at="2015-08-17T11:41:10Z">
+    <groups>
+    </groups>
+    <test name="Default test" duration-ms="59065" started-at="2015-08-17T11:40:11Z" finished-at="2015-08-17T11:41:10Z">
+      <class name="Scripts.CompareWtoE">
+        <test-method status="PASS" signature="main()[pri:0, instance:Scripts.CompareWtoE@179caec]" name="main" duration-ms="59049" started-at="2015-08-17T17:10:11Z" finished-at="2015-08-17T17:11:10Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- main -->
+      </class> <!-- Scripts.CompareWtoE -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>

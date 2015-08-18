@@ -1,0 +1,158 @@
+package Correct;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+
+public class CompareWtoE {
+
+	@Test
+	public static void main() throws InvalidFormatException, IOException, InterruptedException {
+		 
+		FirefoxDriver driver;
+		String p="./R123.xlsx";
+		FileInputStream fis=new FileInputStream(p);
+			Workbook wb=WorkbookFactory.create(fis); 
+			 CellStyle style = wb.createCellStyle();
+			 style.setFillBackgroundColor(IndexedColors.RED.getIndex());
+			 style.setFillPattern(CellStyle.ALIGN_FILL);
+		    driver=new FirefoxDriver();
+		    driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		    driver.manage().window().maximize();
+		    //Login to site
+		    //Texas FTMBA :http://mba-mccombs-texas.admin.data-temp-12twenty.com/
+		    driver.get("http://mba-mccombs-texas.admin.data-temp-12twenty.com/");
+		    driver.findElement(By.xpath("//*[@id='Username']")).sendKeys("admin@12twenty.com");
+		    driver.findElement(By.xpath("//*[@id='Password']")).sendKeys("Salaryview1!");
+		    driver.findElement(By.xpath("//*[@id='loginForm']/div[2]/a")).click();
+		  
+		    Thread.sleep(3000);
+		  
+		   //Click on Data Analysis
+		    driver.findElement(By.xpath("//*[text()='Data Analysis']")).click();
+		   //Click on Data standard reports
+		    driver.findElement(By.xpath("//*[text()='Standard Reports']")).click();
+		   //Click on Table 1.A generate 
+		   driver.findElement(By.xpath("//tr[td[text()='Table 1.A']]//*[text()='Generate']")).click();
+		
+		 
+		  //select year
+		   	WebElement gradyear = driver.findElement(By.xpath(".//*[@id='GraduationClassId']"));
+		   	Select sel=new Select(gradyear);
+		   	String year="2015";
+	   		sel.selectByVisibleText(year);
+
+			 driver.findElement(By.xpath(".//*[@id='generateReportBtn']")).click();
+			 Thread.sleep(5000);
+			 
+			 //wb.createSheet(year);
+			 Sheet s=wb.getSheet(year);
+	 
+			//To locate table.
+			  WebElement mytable = driver.findElement(By.xpath("//*[@id='report-data']"));
+			  //To locate rows of table.
+			  List<WebElement> rows_table = mytable.findElements(By.tagName("tr"));
+			  //To calculate no of rows In table.
+			  int rows_count = rows_table.size();
+			  
+			  ///headers
+			  List<WebElement> Columns_header = rows_table.get(0).findElements(By.tagName("th"));
+			  
+			
+				//get cell data from Excel
+				  System.out.println(s.getRow(0).getCell(0));
+				//get cell data from webtable
+				  System.out.println(Columns_header.get(0).getText());
+				 //Compare
+				  Assert.assertEquals(Columns_header.get(0).getText(), s.getRow(0).getCell(0).getStringCellValue());
+				  
+			  
+				//get cell data from Excel
+				  System.out.println(s.getRow(0).getCell(1));
+				//get cell data from webtable
+				  System.out.println(Columns_header.get(1).getText());
+				 //Compare
+				  Assert.assertEquals(Columns_header.get(1).getText(), s.getRow(0).getCell(1).getStringCellValue());
+				  
+				  
+				//get cell data from Excel
+				  System.out.println(s.getRow(0).getCell(5));
+				//get cell data from webtable
+				  System.out.println(Columns_header.get(2).getText());
+				 //Compare
+				  Assert.assertEquals(Columns_header.get(2).getText(), s.getRow(0).getCell(5).getStringCellValue());
+			  
+			
+				//get cell data from Excel
+				  System.out.println(s.getRow(0).getCell(9));
+				//get cell data from webtable
+				  System.out.println(Columns_header.get(3).getText());
+				 //Compare
+				  Assert.assertEquals(Columns_header.get(3).getText(), s.getRow(0).getCell(9).getStringCellValue());
+				  
+				  
+				  
+			  //Loop will execute till the last row of table.
+			  for (int row=1; row<rows_count; row++){
+			   //To locate columns(cells) of that specific row.
+			   List<WebElement> Columns_row = rows_table.get(row).findElements(By.tagName("td"));
+			   Row r=s.getRow(row);
+			   //To calculate no of columns(cells) In that specific row.
+			   int columns_count = Columns_row.size();
+			   //System.out.println("Number of cells In Row "+row+" are "+columns_count);
+			  // Row r=s.createRow(row);
+			   
+			    		//Loop will execute till the last cell of that specific row.
+			   			for (int column=0; column<columns_count; column++){
+			   			//To retrieve text from that specific cell.
+			   				String webtext = Columns_row.get(column).getText();
+			   				String xltext = r.getCell(column).getStringCellValue();
+			   				System.out.println("Value from web site-->"+webtext);
+			   				System.out.println("Value from excel------>"+xltext);
+			   				
+			   				try 
+			   				{
+			   					Assert.assertEquals(webtext, xltext);
+			   												
+							} catch (Exception e) {
+							
+								System.out.println("This is catch block"+e.getMessage());
+								System.out.println("---------->"+r.getCell(column).getStringCellValue());
+								r.getCell(column).setCellStyle(style);
+								
+							}
+			   				
+			   				
+			   				}
+			   			//System.out.println("--------------------------------------------------");
+			  }  
+			  FileOutputStream fos=new FileOutputStream(p);
+				wb.write(fos);
+				fos.close();
+				driver.quit();	  
+		  }
+
+		
+		
+		
+		
+
+	}
+
+

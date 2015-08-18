@@ -1,0 +1,20 @@
+package Pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+public class ReportTablePage 
+{
+	 WebDriver driver;
+	 By standard = By.xpath("//a[text()='Standard Reports']");
+	 
+	  public (WebDriver driver)
+	  {
+		  this.driver = driver;
+	  }
+	  
+	  public void click_Standard()
+	  {
+		  driver.findElement(standard).click();	
+	  }
+}

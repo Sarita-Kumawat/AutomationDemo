@@ -1,0 +1,18 @@
+package Pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+public class loginPage 
+{
+ WebDriver driver;
+ By unName = By.id("Username");
+ By unpass = By.id("Password");
+ By login = By.id("loggingIn");
+  
+ public loginPage(WebDriver Driver)
+ {
+	 this.driver =Driver;
+ }
+}
